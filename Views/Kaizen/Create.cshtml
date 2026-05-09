@@ -79,11 +79,10 @@
         <label class="fw-bold">Color:</label>
         <input type="color" id="colorPicker" value="#000000">
     </div>
-
     <div class="row">
 
         <!-- Estado Actual -->
-        <div class="col-md-6 mb-4">
+        <div class="col-12 mb-4">
             <label class="fw-semibold">Estado Actual</label>
 
             <div class="toolbar mb-2">
@@ -104,13 +103,13 @@
                 <button onclick="clearCanvas('actual')" class="btn btn-danger btn-sm">🗑 Limpiar</button>
             </div>
 
-            <div class="canvas-box">
-                <canvas id="canvasActual" width="500" height="300"></canvas>
+            <div class="canvas-box w-100">
+                <canvas id="canvasActual" width="1200" height="350" class="w-100"></canvas>
             </div>
         </div>
 
         <!-- Estado Mejorado -->
-        <div class="col-md-6 mb-4">
+        <div class="col-12 mb-4">
             <label class="fw-semibold">Estado Mejorado</label>
 
             <div class="toolbar mb-2">
@@ -131,16 +130,16 @@
                 <button onclick="clearCanvas('mejorado')" class="btn btn-danger btn-sm">🗑 Limpiar</button>
             </div>
 
-            <div class="canvas-box">
-                <canvas id="canvasMejorado" width="500" height="300"></canvas>
+            <div class="canvas-box w-100">
+                <canvas id="canvasMejorado" width="1200" height="350" class="w-100"></canvas>
             </div>
         </div>
 
     </div>
 
-
-
-    <button id="btnGuardar" class="btn btn-success btn-lg mt-3">Guardar Idea</button>
+    <button id="btnGuardar" class="btn btn-success rounded-pill btn-lg mt-3 w-100">
+        Guardar Idea
+    </button>
 
 </div>
 
@@ -186,7 +185,7 @@
         });
     </script>
     <script>
-        /* ============================
+               /* ============================
            OBTENER IMAGEN BASE64
         ============================ */
         function getCanvasImage(type) {
@@ -197,15 +196,13 @@
         }
 
         /* ============================
-           GUARDAR INFORMACIÓN
+           GUARDAR INFORMACIÓN CON SWEETALERT TOAST
         ============================ */
         document.getElementById("btnGuardar").addEventListener("click", async () => {
 
-            // Obtener imágenes Base64
             const imagenActual = getCanvasImage("actual");
             const imagenMejorado = getCanvasImage("mejorado");
 
-            // Construir DTO
             const data = {
                 noEmpleado: parseInt(document.getElementById("NoEmpleado").value),
                 supervisor: document.getElementById("Supervisor").value,
@@ -219,26 +216,56 @@
 
             // Validación mínima
             if (!data.noEmpleado || !data.supervisor || !data.area || !data.areaAplicacion || !data.descripcion) {
-                alert("Por favor llena todos los campos obligatorios.");
+                Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    icon: "error",
+                    title: "Completa todos los campos obligatorios",
+                    showConfirmButton: false,
+                    timer: 2500
+                });
                 return;
             }
 
-            // Enviar al backend
             const response = await fetch("/Kaizen/Create", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
             });
 
+            // Si hubo error del backend
             if (!response.ok) {
                 const error = await response.json();
-                alert(error.message);
+
+                Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    icon: "error",
+                    title: error.message,
+                    showConfirmButton: false,
+                    timer: 2500
+                });
+
                 return;
             }
 
+            // Éxito
             const result = await response.json();
-            alert(result.message);
+
+            Swal.fire({
+                toast: true,
+                position: "top-end",
+                icon: "success",
+                title: result.message,
+                showConfirmButton: false,
+                timer: 2500
             });
+
+            // Opcional: limpiar formulario después de guardar
+            setTimeout(() => {
+                location.reload();
+            }, 2600);
+        });
     </script>
     <script>
         /* ============================
