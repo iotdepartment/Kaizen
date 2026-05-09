@@ -1,0 +1,59 @@
+﻿@model List<Kaizen.Models.KaizenIdea>
+
+<div class="container mt-4">
+    <h3 class="fw-bold mb-4">Ideas Kaizen Registradas</h3>
+
+    <table class="table table-bordered table-striped" id="tablaIdeas">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>No. Empleado</th>
+                <th>Nombre</th>
+                <th>Área</th>
+                <th>Fecha</th>
+                <th>Actual</th>
+                <th>Mejorado</th>
+                <th>Ver</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var idea in Model)
+            {
+                <tr>
+                    <td>@idea.Id</td>
+                    <td>@idea.NoEmpleado</td>
+                    <td>@idea.Empleado?.Nombre</td>
+                    <td>@idea.Area</td>
+                    <td>@idea.FechaRegistro.ToString("yyyy-MM-dd")</td>
+
+                    <!-- Miniatura de imagen actual -->
+                    <td>
+                        @if (!string.IsNullOrEmpty(idea.ImagenActualBase64))
+                        {
+                            <img src="@idea.ImagenActualBase64" width="80" class="img-thumbnail" />
+                        }
+                    </td>
+
+                    <!-- Miniatura de imagen mejorada -->
+                    <td>
+                        @if (!string.IsNullOrEmpty(idea.ImagenMejoradaBase64))
+                        {
+                            <img src="@idea.ImagenMejoradaBase64" width="80" class="img-thumbnail" />
+                        }
+                    </td>
+
+                    <td>
+                        <a class="btn btn-primary btn-sm" href="/Kaizen/Details/@idea.Id">Ver</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        new DataTable('#tablaIdeas');
+    </script>
+}

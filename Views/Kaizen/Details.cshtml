@@ -1,0 +1,30 @@
+﻿@model Kaizen.Models.KaizenIdea
+
+<div class="container mt-4">
+
+    <h3 class="fw-bold mb-4">Detalle de Idea Kaizen</h3>
+
+    <div class="card p-4">
+
+        <p><strong>No. Empleado:</strong> @Model.NoEmpleado</p>
+        <p><strong>Nombre:</strong> @Model.Empleado?.Nombre</p>
+        <p><strong>Supervisor:</strong> @Model.Supervisor</p>
+        <p><strong>Área:</strong> @Model.Area</p>
+        <p><strong>Turno:</strong> @Model.Turno</p>
+        <p><strong>Área Aplicación:</strong> @Model.AreaAplicacion</p>
+        <p><strong>Descripción:</strong> @Model.Descripcion</p>
+        <p><strong>Fecha Registro:</strong> @Model.FechaRegistro</p>
+
+        <hr />
+
+        <h5>Estado Actual</h5>
+        <img src="@Model.ImagenActualBase64" class="img-fluid border" />
+
+        <h5 class="mt-4">Estado Mejorado</h5>
+        <img src="@Model.ImagenMejoradaBase64" class="img-fluid border" />
+
+    </div>
+
+    <a href="/Kaizen/Index" class="btn btn-secondary mt-3">Regresar</a>
+
+</div>

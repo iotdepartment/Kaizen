@@ -1,0 +1,421 @@
+﻿@{
+    ViewData["Title"] = "Registrar Idea Kaizen";
+}
+
+<!-- Fabric.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.2.4/fabric.min.js"></script>
+
+<style>
+    .canvas-box {
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        background: white;
+    }
+
+    .toolbar button {
+        margin-right: 5px;
+    }
+</style>
+
+<div class="mx-auto mt-4 p-4 px-5 shadow-sm bg-body rounded-pill text-center d-inline-block">
+    <h3 class="fw-bold mb-0">Registrar Idea Kaizen</h3>
+</div>
+
+<div class="container rounded-4 bg-body p-5 mt-2 shadow-lg">
+
+    @* <h3 class="fw-bold mb-4">Registrar Idea Kaizen</h3> *@
+
+    <!-- No. Empleado + Nombre -->
+    <div class="row mb-3">
+        <div class="col-md-4 position-relative">
+            <label>No. Empleado</label>
+            <input id="NoEmpleado" class="form-control" autocomplete="off" />
+            <div id="empleadoList" class="list-group position-absolute w-100" style="z-index: 1000;"></div>
+        </div>
+        <div class="col-md-8">
+            <label>Nombre</label>
+            <input id="NombreEmpleado" class="form-control" disabled />
+        </div>
+    </div>
+
+    <!-- Supervisor / Área / Turno -->
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label>Supervisor</label>
+            <input id="Supervisor" class="form-control" />
+        </div>
+
+        <div class="col-md-4">
+            <label>Área</label>
+            <input id="Area" class="form-control" />
+        </div>
+
+        <div class="col-md-4">
+            <label>Turno</label>
+            <select id="Turno" class="form-select">
+                <option value="1">1er Turno</option>
+                <option value="2">2do Turno</option>
+                <option value="3">3er Turno</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Área donde aplica -->
+    <div class="mb-3">
+        <label>Área donde aplica la idea</label>
+        <input id="AreaAplicacion" class="form-control" />
+    </div>
+
+    <!-- Descripción -->
+    <div class="mb-3">
+        <label>Descripción</label>
+        <textarea id="Descripcion" class="form-control" rows="4"></textarea>
+    </div>
+    <hr />
+    <h5 class="fw-bold mt-4">Ilustración de la Idea</h5>
+
+    <!-- Herramientas globales -->
+    <div class="mb-3">
+        <label class="fw-bold">Color:</label>
+        <input type="color" id="colorPicker" value="#000000">
+    </div>
+
+    <div class="row">
+
+        <!-- Estado Actual -->
+        <div class="col-md-6 mb-4">
+            <label class="fw-semibold">Estado Actual</label>
+
+            <div class="toolbar mb-2">
+                <button onclick="setMode('actual','draw')" class="btn btn-dark btn-sm">✏️ Lápiz</button>
+                <button onclick="setMode('actual','erase')" class="btn btn-secondary btn-sm">🧽 Borrar</button>
+                <button onclick="setMode('actual','select')" class="btn btn-info btn-sm">🖱 Seleccionar</button>
+
+                <button onclick="addRect('actual')" class="btn btn-primary btn-sm">▭ Cuadrado</button>
+                <button onclick="addCircle('actual')" class="btn btn-primary btn-sm">⚪ Círculo</button>
+                <button onclick="addTriangle('actual')" class="btn btn-primary btn-sm">🔺 Triángulo</button>
+                <button onclick="addArrow('actual')" class="btn btn-primary btn-sm">➡ Flecha</button>
+
+                <button onclick="addText('actual')" class="btn btn-warning btn-sm">🔤 Texto</button>
+
+                <button onclick="undo('actual')" class="btn btn-outline-dark btn-sm">↩ Deshacer</button>
+                <button onclick="redo('actual')" class="btn btn-outline-dark btn-sm">↪ Rehacer</button>
+
+                <button onclick="clearCanvas('actual')" class="btn btn-danger btn-sm">🗑 Limpiar</button>
+            </div>
+
+            <div class="canvas-box">
+                <canvas id="canvasActual" width="500" height="300"></canvas>
+            </div>
+        </div>
+
+        <!-- Estado Mejorado -->
+        <div class="col-md-6 mb-4">
+            <label class="fw-semibold">Estado Mejorado</label>
+
+            <div class="toolbar mb-2">
+                <button onclick="setMode('mejorado','draw')" class="btn btn-dark btn-sm">✏️ Lápiz</button>
+                <button onclick="setMode('mejorado','erase')" class="btn btn-secondary btn-sm">🧽 Borrar</button>
+                <button onclick="setMode('mejorado','select')" class="btn btn-info btn-sm">🖱 Seleccionar</button>
+
+                <button onclick="addRect('mejorado')" class="btn btn-primary btn-sm">▭ Cuadrado</button>
+                <button onclick="addCircle('mejorado')" class="btn btn-primary btn-sm">⚪ Círculo</button>
+                <button onclick="addTriangle('mejorado')" class="btn btn-primary btn-sm">🔺 Triángulo</button>
+                <button onclick="addArrow('mejorado')" class="btn btn-primary btn-sm">➡ Flecha</button>
+
+                <button onclick="addText('mejorado')" class="btn btn-warning btn-sm">🔤 Texto</button>
+
+                <button onclick="undo('mejorado')" class="btn btn-outline-dark btn-sm">↩ Deshacer</button>
+                <button onclick="redo('mejorado')" class="btn btn-outline-dark btn-sm">↪ Rehacer</button>
+
+                <button onclick="clearCanvas('mejorado')" class="btn btn-danger btn-sm">🗑 Limpiar</button>
+            </div>
+
+            <div class="canvas-box">
+                <canvas id="canvasMejorado" width="500" height="300"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <button id="btnGuardar" class="btn btn-success btn-lg mt-3">Guardar Idea</button>
+
+</div>
+
+@section Scripts {
+
+    <script>
+                /* ============================
+           AUTOCOMPLETADO DE EMPLEADOS
+        ============================ */
+        const inputEmpleado = document.getElementById("NoEmpleado");
+        const listEmpleado = document.getElementById("empleadoList");
+
+        inputEmpleado.addEventListener("input", async function () {
+            const query = this.value.trim();
+            listEmpleado.innerHTML = "";
+
+            if (query.length < 1) return;
+
+            const response = await fetch(`/Kaizen/SearchEmpleados?query=${query}`);
+            const empleados = await response.json();
+
+            empleados.forEach(emp => {
+                const item = document.createElement("button");
+                item.type = "button";
+                item.classList.add("list-group-item", "list-group-item-action");
+                item.textContent = `${emp.noEmpleado} - ${emp.nombre}`;
+
+                item.addEventListener("click", () => {
+                    inputEmpleado.value = emp.noEmpleado;
+                    document.getElementById("NombreEmpleado").value = emp.nombre;
+                    listEmpleado.innerHTML = "";
+                });
+
+                listEmpleado.appendChild(item);
+            });
+        });
+
+        // Ocultar lista si se hace clic fuera
+        document.addEventListener("click", function (e) {
+            if (!inputEmpleado.contains(e.target)) {
+                listEmpleado.innerHTML = "";
+            }
+        });
+    </script>
+    <script>
+        /* ============================
+           OBTENER IMAGEN BASE64
+        ============================ */
+        function getCanvasImage(type) {
+            return canvases[type].toDataURL({
+                format: 'png',
+                quality: 1.0
+            });
+        }
+
+        /* ============================
+           GUARDAR INFORMACIÓN
+        ============================ */
+        document.getElementById("btnGuardar").addEventListener("click", async () => {
+
+            // Obtener imágenes Base64
+            const imagenActual = getCanvasImage("actual");
+            const imagenMejorado = getCanvasImage("mejorado");
+
+            // Construir DTO
+            const data = {
+                noEmpleado: parseInt(document.getElementById("NoEmpleado").value),
+                supervisor: document.getElementById("Supervisor").value,
+                area: document.getElementById("Area").value,
+                turno: parseInt(document.getElementById("Turno").value),
+                areaAplicacion: document.getElementById("AreaAplicacion").value,
+                descripcion: document.getElementById("Descripcion").value,
+                imagenActualBase64: imagenActual,
+                imagenMejoradaBase64: imagenMejorado
+            };
+
+            // Validación mínima
+            if (!data.noEmpleado || !data.supervisor || !data.area || !data.areaAplicacion || !data.descripcion) {
+                alert("Por favor llena todos los campos obligatorios.");
+                return;
+            }
+
+            // Enviar al backend
+            const response = await fetch("/Kaizen/Create", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                alert(error.message);
+                return;
+            }
+
+            const result = await response.json();
+            alert(result.message);
+            });
+    </script>
+    <script>
+        /* ============================
+           INICIALIZAR CANVAS
+        ============================ */
+        var canvasActual = new fabric.Canvas('canvasActual');
+        var canvasMejorado = new fabric.Canvas('canvasMejorado');
+
+        const canvases = {
+            actual: canvasActual,
+            mejorado: canvasMejorado
+        };
+
+        /* ============================
+           HISTORIAL (DESHACER/REHACER)
+        ============================ */
+        const history = {
+            actual: [],
+            mejorado: []
+        };
+        const redoStack = {
+            actual: [],
+            mejorado: []
+        };
+
+        function saveState(type) {
+            redoStack[type] = [];
+            history[type].push(JSON.stringify(canvases[type].toJSON()));
+        }
+
+        Object.keys(canvases).forEach(type => {
+            canvases[type].on('object:added', () => saveState(type));
+            canvases[type].on('object:modified', () => saveState(type));
+        });
+
+        function undo(type) {
+            if (history[type].length > 1) {
+                redoStack[type].push(history[type].pop());
+                canvases[type].loadFromJSON(history[type][history[type].length - 1], () => canvases[type].renderAll());
+            }
+        }
+
+        function redo(type) {
+            if (redoStack[type].length > 0) {
+                const state = redoStack[type].pop();
+                history[type].push(state);
+                canvases[type].loadFromJSON(state, () => canvases[type].renderAll());
+            }
+        }
+
+        /* ============================
+           MODOS DE DIBUJO
+        ============================ */
+        function setMode(type, mode) {
+            const c = canvases[type];
+            const color = document.getElementById("colorPicker").value;
+            const size = parseInt(document.getElementById("brushSize").value);
+
+            if (mode === "draw") {
+                c.isDrawingMode = true;
+                c.freeDrawingBrush.width = size;
+                c.freeDrawingBrush.color = color;
+            }
+
+            if (mode === "erase") {
+                c.isDrawingMode = true;
+                c.freeDrawingBrush.width = size + 10;
+                c.freeDrawingBrush.color = "white";
+            }
+
+            if (mode === "select") {
+                c.isDrawingMode = false;
+            }
+        }
+
+        /* ============================
+           FIGURAS
+        ============================ */
+        function addRect(type) {
+            const c = canvases[type];
+            c.isDrawingMode = false;
+
+            c.add(new fabric.Rect({
+                left: 50,
+                top: 50,
+                width: 120,
+                height: 80,
+                fill: document.getElementById("colorPicker").value,
+                stroke: "black",
+                strokeWidth: 2
+            }));
+        }
+
+        function addCircle(type) {
+            const c = canvases[type];
+            c.isDrawingMode = false;
+
+            c.add(new fabric.Circle({
+                left: 80,
+                top: 80,
+                radius: 40,
+                fill: document.getElementById("colorPicker").value,
+                stroke: "black",
+                strokeWidth: 2
+            }));
+        }
+
+        function addTriangle(type) {
+            const c = canvases[type];
+            c.isDrawingMode = false;
+
+            c.add(new fabric.Triangle({
+                left: 100,
+                top: 100,
+                width: 100,
+                height: 100,
+                fill: document.getElementById("colorPicker").value,
+                stroke: "black",
+                strokeWidth: 2
+            }));
+        }
+
+        function addArrow(type) {
+            const c = canvases[type];
+            c.isDrawingMode = false;
+
+            const color = document.getElementById("colorPicker").value;
+
+            const line = new fabric.Line([50, 100, 150, 100], {
+                stroke: color,
+                strokeWidth: 4
+            });
+
+            const triangle = new fabric.Triangle({
+                left: 150,
+                top: 92,
+                width: 15,
+                height: 15,
+                fill: color,
+                angle: 90
+            });
+
+            const group = new fabric.Group([line, triangle], { selectable: true });
+            c.add(group);
+        }
+
+        /* ============================
+           TEXTO
+        ============================ */
+        function addText(type) {
+            const c = canvases[type];
+            c.isDrawingMode = false;
+
+            c.add(new fabric.Textbox("Texto aquí", {
+                left: 50,
+                top: 50,
+                fontSize: 20,
+                fill: document.getElementById("colorPicker").value,
+                editable: true
+            }));
+        }
+
+        /* ============================
+           LIMPIAR
+        ============================ */
+        function clearCanvas(type) {
+            canvases[type].clear();
+            history[type] = [];
+            redoStack[type] = [];
+        }
+
+
+                function getCanvasImage(type) {
+            return canvases[type].toDataURL({
+                format: 'png',
+                quality: 1.0
+            });
+        }
+    </script>
+}
