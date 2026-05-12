@@ -1,59 +1,122 @@
 ﻿@model List<Kaizen.Models.KaizenIdea>
 
 <div class="container mt-4">
-    <h3 class="fw-bold mb-4">Ideas Kaizen Registradas</h3>
 
-    <table class="table table-bordered table-striped" id="tablaIdeas">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>No. Empleado</th>
-                <th>Nombre</th>
-                <th>Área</th>
-                <th>Fecha</th>
-                <th>Actual</th>
-                <th>Mejorado</th>
-                <th>Ver</th>
-            </tr>
-        </thead>
+    <!-- Encabezado corporativo -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+                <h3 class="fw-bold mb-1 text-primary">Ideas Kaizen Registradas</h3>
+                <p class="text-muted mb-0">Visualiza, filtra y administra todas las ideas enviadas por los colaboradores.</p>
+            </div>
 
-        <tbody>
-            @foreach (var idea in Model)
-            {
-                <tr>
-                    <td>@idea.Id</td>
-                    <td>@idea.NoEmpleado</td>
-                    <td>@idea.Empleado?.Nombre</td>
-                    <td>@idea.Area</td>
-                    <td>@idea.FechaRegistro.ToString("yyyy-MM-dd")</td>
+            <div class="text-end">
+                <span class="badge bg-primary fs-6 px-3 py-2">
+                    Total: @Model.Count ideas
+                </span>
+            </div>
+        </div>
+    </div>
 
-                    <!-- Miniatura de imagen actual -->
-                    <td>
-                        @if (!string.IsNullOrEmpty(idea.ImagenActualBase64))
-                        {
-                            <img src="@idea.ImagenActualBase64" width="80" class="img-thumbnail" />
-                        }
-                    </td>
+    <!-- Filtro por área -->
+    <div class="card shadow-sm border-0 mb-3">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="fw-bold">Filtrar por Área</label>
+                    <select id="filtroArea" class="form-select">
+                        <option value="">Todas las áreas</option>
+                        <option value="Mixing">Mixing</option>
+                        <option value="Extruder">Extruder</option>
+                        <option value="Oven">Oven</option>
+                        <option value="Inspección">Inspección</option>
+                        <option value="Ensamble">Ensamble</option>
+                        <option value="Safe Launch">Safe Launch</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                    <!-- Miniatura de imagen mejorada -->
-                    <td>
-                        @if (!string.IsNullOrEmpty(idea.ImagenMejoradaBase64))
-                        {
-                            <img src="@idea.ImagenMejoradaBase64" width="80" class="img-thumbnail" />
-                        }
-                    </td>
+    <!-- Tabla -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
 
-                    <td>
-                        <a class="btn btn-primary btn-sm" href="/Kaizen/Details/@idea.Id">Ver</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+            <table class="table table-hover align-middle" id="tablaIdeas">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>No. Empleado</th>
+                        <th>Nombre</th>
+                        <th>Área</th>
+                        <th>Fecha</th>
+                        <th>Actual</th>
+                        <th>Mejorado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var idea in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold">@idea.Id</td>
+                            <td>@idea.NoEmpleado</td>
+                            <td>@idea.Empleado?.Nombre</td>
+                            <td>@idea.Area</td>
+                            <td>@idea.FechaRegistro.ToString("yyyy-MM-dd")</td>
+
+                            <td>
+                                @if (!string.IsNullOrEmpty(idea.ImagenActualBase64))
+                                {
+                                    <img src="@idea.ImagenActualBase64" width="70" class="rounded shadow-sm border" />
+                                }
+                            </td>
+
+                            <td>
+                                @if (!string.IsNullOrEmpty(idea.ImagenMejoradaBase64))
+                                {
+                                    <img src="@idea.ImagenMejoradaBase64" width="70" class="rounded shadow-sm border" />
+                                }
+                            </td>
+
+                            <td>
+                                <a class="btn btn-primary btn-sm" href="/Kaizen/Details/@idea.Id">
+                                    <i class="bi bi-eye-fill"></i> Ver
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
 </div>
 
 @section Scripts {
     <script>
-        new DataTable('#tablaIdeas');
+
+        // Inicializar DataTable con botones corporativos
+        var tabla = new DataTable('#tablaIdeas', {
+            responsive: true,
+            pageLength: 10,
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+            },
+            dom: 'Bfrtip',
+            buttons: [
+                { extend: 'excel', className: 'btn btn-success btn-sm', text: '<i class="bi bi-file-earmark-excel"></i> Excel' },
+                { extend: 'pdf', className: 'btn btn-danger btn-sm', text: '<i class="bi bi-file-earmark-pdf"></i> PDF' },
+                { extend: 'print', className: 'btn btn-secondary btn-sm', text: '<i class="bi bi-printer"></i> Imprimir' }
+            ]
+        });
+
+        // Filtro por área
+        document.getElementById("filtroArea").addEventListener("change", function () {
+            tabla.column(3).search(this.value).draw();
+        });
+
     </script>
 }

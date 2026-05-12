@@ -28,12 +28,12 @@
     <!-- No. Empleado + Nombre -->
     <div class="row mb-3">
         <div class="col-md-4 position-relative">
-            <label>No. Empleado</label>
+            <label class="fw-bold">No. Empleado</label>
             <input id="NoEmpleado" class="form-control" autocomplete="off" />
             <div id="empleadoList" class="list-group position-absolute w-100" style="z-index: 1000;"></div>
         </div>
         <div class="col-md-8">
-            <label>Nombre</label>
+            <label class="fw-bold">Nombre</label>
             <input id="NombreEmpleado" class="form-control" disabled />
         </div>
     </div>
@@ -41,17 +41,25 @@
     <!-- Supervisor / Área / Turno -->
     <div class="row mb-3">
         <div class="col-md-4">
-            <label>Supervisor</label>
+            <label class="fw-bold">Supervisor</label>
             <input id="Supervisor" class="form-control" />
         </div>
 
         <div class="col-md-4">
-            <label>Área</label>
-            <input id="Area" class="form-control" />
+            <label class="fw-bold">Área</label>
+            <select id="Area" class="form-select">
+                <option value="">Seleccione un área</option>
+                <option value="Mixing">Mixing</option>
+                <option value="Extruder">Extruder</option>
+                <option value="Oven">Oven</option>
+                <option value="Inspeccion">Inspección</option>
+                <option value="Ensamble">Ensamble</option>
+                <option value="Safe Launch">Safe Launch</option>
+            </select>
         </div>
 
         <div class="col-md-4">
-            <label>Turno</label>
+            <label class="fw-bold">Turno</label>
             <select id="Turno" class="form-select">
                 <option value="1">1er Turno</option>
                 <option value="2">2do Turno</option>
@@ -62,91 +70,150 @@
 
     <!-- Área donde aplica -->
     <div class="mb-3">
-        <label>Área donde aplica la idea</label>
+        <label class="fw-bold">Área donde aplica la idea</label>
         <input id="AreaAplicacion" class="form-control" />
     </div>
 
     <!-- Descripción -->
     <div class="mb-3">
-        <label>Descripción</label>
+        <label class="fw-bold">Descripción</label>
         <textarea id="Descripcion" class="form-control" rows="4"></textarea>
     </div>
     <hr />
-    <h5 class="fw-bold mt-4">Ilustración de la Idea</h5>
+
+    <h5 class="fw-bold fs-3 mt-4 mb-1 text-primary">Ilustración de la Idea</h5>
+    <p class="text-muted mb-3">
+        Ilustra tu idea de mejora utilizando dibujos, figuras o texto. Representa visualmente el problema y la solución propuesta.
+    </p>
 
     <!-- Herramientas globales -->
-    <div class="mb-3">
-        <label class="fw-bold">Color:</label>
-        <input type="color" id="colorPicker" value="#000000">
+    <div class="d-inline-flex align-items-center gap-3 mb-4 p-2 bg-light rounded border shadow-sm w-auto">
+        <div>
+            <label class="fw-bold me-2">Color:</label>
+            <input type="color" id="colorPicker" value="#000000" class="form-control form-control-color d-inline-block">
+        </div>
     </div>
-    <div class="row">
+
+    <div class="row g-4">
 
         <!-- Estado Actual -->
-        <div class="col-12 mb-4">
-            <label class="fw-semibold">Estado Actual</label>
+        <div class="col-12">
+            <div class="p-3 border rounded shadow-sm bg-body-tertiary">
 
-            <div class="toolbar mb-2">
-                <button onclick="setMode('actual','draw')" class="btn btn-dark btn-sm">✏️ Lápiz</button>
-                <button onclick="setMode('actual','erase')" class="btn btn-secondary btn-sm">🧽 Borrar</button>
-                <button onclick="setMode('actual','select')" class="btn btn-info btn-sm">🖱 Seleccionar</button>
+                <label class="fw-bold fs-4 mb-1 d-block text-secondary">1. Estado Actual</label>
+                <p class="text-muted mb-3">
+                    Describe o dibuja cómo es el proceso actualmente. Señala problemas, retrasos, riesgos o cualquier situación que deba mejorarse.
+                </p>
 
-                <button onclick="addRect('actual')" class="btn btn-primary btn-sm">▭ Cuadrado</button>
-                <button onclick="addCircle('actual')" class="btn btn-primary btn-sm">⚪ Círculo</button>
-                <button onclick="addTriangle('actual')" class="btn btn-primary btn-sm">🔺 Triángulo</button>
-                <button onclick="addArrow('actual')" class="btn btn-primary btn-sm">➡ Flecha</button>
+                <!-- Toolbar -->
+                <div class="btn-toolbar mb-3" role="toolbar">
 
-                <button onclick="addText('actual')" class="btn btn-warning btn-sm">🔤 Texto</button>
+                    <!-- Grupo dibujo -->
+                    <div class="btn-group me-2" role="group">
+                        <button onclick="setMode('actual','draw')" class="btn btn-dark btn-sm"><i class="bi bi-pencil-fill"></i></button>
+                        <button onclick="setMode('actual','erase')" class="btn btn-secondary btn-sm"><i class="bi bi-eraser-fill"></i></button>
+                        <button onclick="setMode('actual','select')" class="btn btn-info btn-sm"><i class="bi bi-cursor-fill"></i></button>
+                    </div>
 
-                <button onclick="undo('actual')" class="btn btn-outline-dark btn-sm">↩ Deshacer</button>
-                <button onclick="redo('actual')" class="btn btn-outline-dark btn-sm">↪ Rehacer</button>
+                    <!-- Grupo figuras -->
+                    <div class="btn-group me-2" role="group">
+                        <button onclick="addRect('actual')" class="btn btn-primary btn-sm"><i class="bi bi-square"></i></button>
+                        <button onclick="addCircle('actual')" class="btn btn-primary btn-sm"><i class="bi bi-circle"></i></button>
+                        <button onclick="addTriangle('actual')" class="btn btn-primary btn-sm"><i class="bi bi-triangle"></i></button>
+                        <button onclick="addArrow('actual')" class="btn btn-primary btn-sm"><i class="bi bi-arrow-right"></i></button>
+                    </div>
 
-                <button onclick="clearCanvas('actual')" class="btn btn-danger btn-sm">🗑 Limpiar</button>
-            </div>
+                    <!-- Texto -->
+                    <div class="btn-group me-2" role="group">
+                        <button onclick="addText('actual')" class="btn btn-warning btn-sm"><i class="bi bi-type"></i></button>
+                    </div>
 
-            <div class="canvas-box w-100">
-                <canvas id="canvasActual" width="1200" height="350" class="w-100"></canvas>
+                    <!-- Undo/Redo -->
+                    <div class="btn-group me-2" role="group">
+                        <button onclick="undo('actual')" class="btn btn-outline-dark btn-sm"><i class="bi bi-arrow-counterclockwise"></i></button>
+                        <button onclick="redo('actual')" class="btn btn-outline-dark btn-sm"><i class="bi bi-arrow-clockwise"></i></button>
+                    </div>
+
+                    <!-- Limpiar -->
+                    <div class="btn-group" role="group">
+                        <button onclick="clearCanvas('actual')" class="btn btn-danger btn-sm"><i class="bi bi-trash-fill"></i></button>
+                    </div>
+
+                </div>
+
+                <!-- Canvas -->
+                <div class="canvas-box w-100 border-3 rounded shadow-sm p-2">
+                    <canvas id="canvasActual" width="1200" height="350" class="w-100"></canvas>
+                </div>
+
             </div>
         </div>
 
         <!-- Estado Mejorado -->
-        <div class="col-12 mb-4">
-            <label class="fw-semibold">Estado Mejorado</label>
+        <div class="col-12">
+            <div class="p-3 border rounded shadow-sm bg-body-tertiary">
 
-            <div class="toolbar mb-2">
-                <button onclick="setMode('mejorado','draw')" class="btn btn-dark btn-sm">✏️ Lápiz</button>
-                <button onclick="setMode('mejorado','erase')" class="btn btn-secondary btn-sm">🧽 Borrar</button>
-                <button onclick="setMode('mejorado','select')" class="btn btn-info btn-sm">🖱 Seleccionar</button>
+                <label class="fw-bold fs-4 mb-1 d-block text-secondary">2. Estado Mejorado</label>
+                <p class="text-muted mb-3">
+                    Representa cómo debería funcionar el proceso después de aplicar tu mejora. Muestra el flujo ideal, reducción de pasos o eliminación de desperdicios.
+                </p>
 
-                <button onclick="addRect('mejorado')" class="btn btn-primary btn-sm">▭ Cuadrado</button>
-                <button onclick="addCircle('mejorado')" class="btn btn-primary btn-sm">⚪ Círculo</button>
-                <button onclick="addTriangle('mejorado')" class="btn btn-primary btn-sm">🔺 Triángulo</button>
-                <button onclick="addArrow('mejorado')" class="btn btn-primary btn-sm">➡ Flecha</button>
+                <!-- Toolbar -->
+                <div class="btn-toolbar mb-3" role="toolbar">
 
-                <button onclick="addText('mejorado')" class="btn btn-warning btn-sm">🔤 Texto</button>
+                    <!-- Grupo dibujo -->
+                    <div class="btn-group me-2" role="group">
+                        <button onclick="setMode('mejorado','draw')" class="btn btn-dark btn-sm"><i class="bi bi-pencil-fill"></i></button>
+                        <button onclick="setMode('mejorado','erase')" class="btn btn-secondary btn-sm"><i class="bi bi-eraser-fill"></i></button>
+                        <button onclick="setMode('mejorado','select')" class="btn btn-info btn-sm"><i class="bi bi-cursor-fill"></i></button>
+                    </div>
 
-                <button onclick="undo('mejorado')" class="btn btn-outline-dark btn-sm">↩ Deshacer</button>
-                <button onclick="redo('mejorado')" class="btn btn-outline-dark btn-sm">↪ Rehacer</button>
+                    <!-- Grupo figuras -->
+                    <div class="btn-group me-2" role="group">
+                        <button onclick="addRect('mejorado')" class="btn btn-primary btn-sm"><i class="bi bi-square"></i></button>
+                        <button onclick="addCircle('mejorado')" class="btn btn-primary btn-sm"><i class="bi bi-circle"></i></button>
+                        <button onclick="addTriangle('mejorado')" class="btn btn-primary btn-sm"><i class="bi bi-triangle"></i></button>
+                        <button onclick="addArrow('mejorado')" class="btn btn-primary btn-sm"><i class="bi bi-arrow-right"></i></button>
+                    </div>
 
-                <button onclick="clearCanvas('mejorado')" class="btn btn-danger btn-sm">🗑 Limpiar</button>
-            </div>
+                    <!-- Texto -->
+                    <div class="btn-group me-2" role="group">
+                        <button onclick="addText('mejorado')" class="btn btn-warning btn-sm"><i class="bi bi-type"></i></button>
+                    </div>
 
-            <div class="canvas-box w-100">
-                <canvas id="canvasMejorado" width="1200" height="350" class="w-100"></canvas>
+                    <!-- Undo/Redo -->
+                    <div class="btn-group me-2" role="group">
+                        <button onclick="undo('mejorado')" class="btn btn-outline-dark btn-sm"><i class="bi bi-arrow-counterclockwise"></i></button>
+                        <button onclick="redo('mejorado')" class="btn btn-outline-dark btn-sm"><i class="bi bi-arrow-clockwise"></i></button>
+                    </div>
+
+                    <!-- Limpiar -->
+                    <div class="btn-group" role="group">
+                        <button onclick="clearCanvas('mejorado')" class="btn btn-danger btn-sm"><i class="bi bi-trash-fill"></i></button>
+                    </div>
+
+                </div>
+
+                <!-- Canvas -->
+                <div class="canvas-box w-100 border-3 rounded shadow-sm p-2">
+                    <canvas id="canvasMejorado" width="1200" height="350" class="w-100"></canvas>
+                </div>
+
             </div>
         </div>
 
     </div>
 
-    <button id="btnGuardar" class="btn btn-success rounded-pill btn-lg mt-3 w-100">
-        Guardar Idea
+    <!-- Botón Guardar -->
+    <button id="btnGuardar" class="btn btn-success rounded-pill btn-lg mt-4 w-100 shadow">
+        <i class="bi bi-save-fill me-2"></i> Enviar Idea
     </button>
-
 </div>
 
 @section Scripts {
 
     <script>
-                /* ============================
+        /* ============================
            AUTOCOMPLETADO DE EMPLEADOS
         ============================ */
         const inputEmpleado = document.getElementById("NoEmpleado");
@@ -185,7 +252,7 @@
         });
     </script>
     <script>
-               /* ============================
+        /* ============================
            OBTENER IMAGEN BASE64
         ============================ */
         function getCanvasImage(type) {
@@ -267,7 +334,24 @@
             }, 2600);
         });
     </script>
+
     <script>
+
+              /* ============================
+           ALINEACIÓN MAGNÉTICA
+        ============================ */
+        function enableSnap(c) {
+            const grid = 20;
+
+            c.on("object:moving", function (e) {
+                const obj = e.target;
+                obj.set({
+                    left: Math.round(obj.left / grid) * grid,
+                    top: Math.round(obj.top / grid) * grid
+                });
+            });
+        }
+
         /* ============================
            INICIALIZAR CANVAS
         ============================ */
@@ -280,39 +364,105 @@
         };
 
         /* ============================
+           AJUSTAR TAMAÑO DEL CANVAS
+        ============================ */
+        function resizeCanvas(type) {
+            const c = canvases[type];
+            const container = c.upperCanvasEl.parentNode;
+
+            c.setWidth(container.clientWidth);
+            c.setHeight(350);
+
+            c.renderAll();
+        }
+
+        resizeCanvas("actual");
+        resizeCanvas("mejorado");
+
+        enableSnap(canvasActual);
+        enableSnap(canvasMejorado);
+
+        window.addEventListener("resize", () => {
+            resizeCanvas("actual");
+            resizeCanvas("mejorado");
+        });
+
+        /* ============================
            HISTORIAL (DESHACER/REHACER)
         ============================ */
         const history = {
             actual: [],
             mejorado: []
         };
+
         const redoStack = {
             actual: [],
             mejorado: []
         };
 
         function saveState(type) {
+            const c = canvases[type];
             redoStack[type] = [];
-            history[type].push(JSON.stringify(canvases[type].toJSON()));
+            history[type].push(JSON.stringify(c.toJSON()));
         }
 
+        // Guardar estado inicial
+        saveState("actual");
+        saveState("mejorado");
+
+        /* Registrar cambios SOLO cuando el usuario modifica algo */
         Object.keys(canvases).forEach(type => {
-            canvases[type].on('object:added', () => saveState(type));
-            canvases[type].on('object:modified', () => saveState(type));
+            const c = canvases[type];
+
+            c.on("object:added", () => {
+                if (c._skipHistory) return;
+                saveState(type);
+            });
+
+            c.on("object:modified", () => {
+                if (c._skipHistory) return;
+                saveState(type);
+            });
+
+            c.on("object:removed", () => {
+                if (c._skipHistory) return;
+                saveState(type);
+            });
         });
 
+        /* ============================
+           UNDO
+        ============================ */
         function undo(type) {
+            const c = canvases[type];
+
             if (history[type].length > 1) {
                 redoStack[type].push(history[type].pop());
-                canvases[type].loadFromJSON(history[type][history[type].length - 1], () => canvases[type].renderAll());
+                const prev = history[type][history[type].length - 1];
+
+                c._skipHistory = true;
+                c.loadFromJSON(prev, () => {
+                    c.renderAll();
+                    c._skipHistory = false;
+                });
             }
         }
 
+        /* ============================
+           REDO
+        ============================ */
         function redo(type) {
+            const c = canvases[type];
+
             if (redoStack[type].length > 0) {
                 const state = redoStack[type].pop();
                 history[type].push(state);
-                canvases[type].loadFromJSON(state, () => canvases[type].renderAll());
+
+                c._skipHistory = true;
+                c.loadFromJSON(state, () => {
+                    c.renderAll();
+                    c._skipHistory = false;
+                });
             }
         }
 
@@ -322,22 +472,29 @@
         function setMode(type, mode) {
             const c = canvases[type];
             const color = document.getElementById("colorPicker").value;
-            const size = parseInt(document.getElementById("brushSize").value);
+
+            c.discardActiveObject();
+            c.renderAll();
 
             if (mode === "draw") {
                 c.isDrawingMode = true;
-                c.freeDrawingBrush.width = size;
+                c.freeDrawingBrush = new fabric.PencilBrush(c);
                 c.freeDrawingBrush.color = color;
+                c.freeDrawingBrush.width = 3;
+                return;
             }
 
             if (mode === "erase") {
                 c.isDrawingMode = true;
-                c.freeDrawingBrush.width = size + 10;
+                c.freeDrawingBrush = new fabric.PencilBrush(c);
                 c.freeDrawingBrush.color = "white";
+                c.freeDrawingBrush.width = 20;
+                return;
             }
 
             if (mode === "select") {
                 c.isDrawingMode = false;
+                return;
             }
         }
 
@@ -378,7 +535,7 @@
             c.isDrawingMode = false;
 
             c.add(new fabric.Triangle({
-                left: 100,
+                left: 10,
                 top: 100,
                 width: 100,
                 height: 100,
@@ -400,8 +557,8 @@
             });
 
             const triangle = new fabric.Triangle({
-                left: 150,
-                top: 92,
+                left: 160,
+                top: 93,
                 width: 15,
                 height: 15,
                 fill: color,
@@ -433,12 +590,13 @@
         ============================ */
         function clearCanvas(type) {
             canvases[type].clear();
-            history[type] = [];
-            redoStack[type] = [];
+            saveState(type);
         }
 
-
-                function getCanvasImage(type) {
+        /* ============================
+           EXPORTAR IMAGEN
+        ============================ */
+        function getCanvasImage(type) {
             return canvases[type].toDataURL({
                 format: 'png',
                 quality: 1.0
