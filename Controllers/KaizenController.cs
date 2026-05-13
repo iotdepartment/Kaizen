@@ -1,16 +1,23 @@
 ﻿using Kaizen.DTOs;
 using Kaizen.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+[Authorize] 
 public class KaizenController : Controller
 {
     private readonly AppDbContext _context;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public KaizenController(AppDbContext context)
+
+    public KaizenController(AppDbContext context, UserManager<ApplicationUser> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
+
 
     public async Task<IActionResult> Index()
     {
@@ -75,15 +82,14 @@ public class KaizenController : Controller
         return Json(empleado);
     }
 
+    // Vista de detalles
     public async Task<IActionResult> Details(int id)
     {
         var idea = await _context.KaizenIdeas
-            .Include(k => k.Empleado)
-            .FirstOrDefaultAsync(k => k.Id == id);
+            .Include(i => i.Comentarios) // solo comentarios
+            .FirstOrDefaultAsync(i => i.Id == id);
 
-        if (idea == null)
-            return NotFound();
-
+        if (idea == null) return NotFound();
         return View(idea);
     }
 
@@ -103,4 +109,75 @@ public class KaizenController : Controller
 
         return Json(empleados);
     }
+
+    // Cambiar estado de la idea
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> CambiarEstado(int id, string nuevoEstado, string? comentario)
+    {
+        var idea = await _context.KaizenIdeas.FindAsync(id);
+        if (idea == null) return NotFound();
+
+        idea.Estado = nuevoEstado;
+        idea.EstadoFecha = DateTime.Now;
+
+        // En vez de guardar el comentario aquí, lo mandamos a KaizenComentarios
+        if (!string.IsNullOrEmpty(comentario))
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var ultimoNumero = await _context.KaizenComentarios
+                .Where(c => c.IdeaId == id)
+                .OrderByDescending(c => c.NumeroComentario)
+                .Select(c => c.NumeroComentario)
+                .FirstOrDefaultAsync();
+
+            var nuevoComentario = new KaizenComentario
+            {
+                IdeaId = id,
+                Usuario = user?.UserName,
+                Comentario = comentario,
+                FechaComentario = DateTime.Now,
+                NumeroComentario = (ultimoNumero == 0 ? 1 : ultimoNumero + 1)
+            };
+
+            _context.KaizenComentarios.Add(nuevoComentario);
+        }
+
+        await _context.SaveChangesAsync();
+        return RedirectToAction("Details", new { id });
+    }
+
+    // Agregar comentario independiente
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> AgregarComentario(int ideaId, string comentario)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Unauthorized();
+
+        // Obtener el último número de comentario para esa idea
+        var ultimoNumero = await _context.KaizenComentarios
+            .Where(c => c.IdeaId == ideaId)
+            .OrderByDescending(c => c.NumeroComentario)
+            .Select(c => c.NumeroComentario)
+            .FirstOrDefaultAsync();
+
+        var nuevoComentario = new KaizenComentario
+        {
+            IdeaId = ideaId,
+            Usuario = user.UserName,
+            Comentario = comentario,
+            FechaComentario = DateTime.Now,
+            NumeroComentario = ultimoNumero + 1 // asigna consecutivo
+        };
+
+        _context.KaizenComentarios.Add(nuevoComentario);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Details", new { id = ideaId });
+    }
+
+
+
 }

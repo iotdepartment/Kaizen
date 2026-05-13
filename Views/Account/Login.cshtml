@@ -1,0 +1,61 @@
+﻿@using Kaizen.ViewModels
+@model LoginViewModel
+@{
+    Layout = "_LayoutLogin";
+    ViewData["Title"] = "Iniciar sesión";
+}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card shadow-lg border-0 rounded-4" style="width: 350px;">
+        <div class="card-body p-4 text-center">
+
+            <!-- Icono centrado -->
+            <div class="bg-tertiary rounded-4 shadow-sm d-inline-block mb-3">
+                <img src="~/images/icono-tg.png" alt="Toyoda Gosei"
+                     class="img-fluid" style="max-height: 70px;" />
+            </div>
+
+            <h4 class="fw-bold mb-4">Sistema de Monitoreo de Inspección</h4>
+
+            <form asp-action="Login" method="post">
+                @Html.AntiForgeryToken()
+
+                <!-- Usuario -->
+                <div class="mb-3">
+                    <div class="input-group rounded-4">
+                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <input asp-for="Email" class="form-control rounded-end" placeholder="Usuario" required />
+                    </div>
+                </div>
+
+                <!-- Contraseña -->
+                <div class="mb-3">
+                    <div class="input-group rounded-4">
+                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                        <input asp-for="Password" type="password" class="form-control rounded-end" placeholder="Contraseña" required />
+                    </div>
+                </div>
+
+                <!-- Recordarme -->
+                <div class="mb-3 text-start">
+                    <input asp-for="RememberMe" type="checkbox" /> Recordarme
+                </div>
+
+                <!-- Botón -->
+                <button type="submit" class="btn btn-dark w-100 rounded-pill">
+                    <i class="bi bi-box-arrow-in-right"></i> Ingresar
+                </button>
+            </form>
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger mt-3 text-center">
+                    <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+                </div>
+            }
+        </div>
+        <div class="card-footer text-muted text-center small">
+            &copy; @DateTime.Now.Year - By IoT
+        </div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+﻿@using Kaizen.ViewModels
+@model RegisterViewModel
+
+<h2>Registro</h2>
+
+<form asp-action="Register" method="post">
+    <div>
+        <label asp-for="NombreCompleto"></label>
+        <input asp-for="NombreCompleto" />
+    </div>
+    <div>
+        <label asp-for="Email"></label>
+        <input asp-for="Email" />
+    </div>
+    <div>
+        <label asp-for="Password"></label>
+        <input asp-for="Password" type="password" />
+    </div>
+    <button type="submit">Registrarse</button>
+</form>

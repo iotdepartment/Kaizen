@@ -31,6 +31,11 @@ namespace Kaizen.Models
 
         public string ImagenActualBase64 { get; set; }
         public string ImagenMejoradaBase64 { get; set; }
+
+        public string Estado { get; set; } = "Pendiente";
+        public string? EstadoComentario { get; set; }
+        public DateTime? EstadoFecha { get; set; }
+        public List<KaizenComentario> Comentarios { get; set; } = new();
     }
 
 }
